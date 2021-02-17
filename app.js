@@ -4,6 +4,7 @@ const request = require("request");
 const https = require("https");
 const mailchimp = require("@mailchimp/mailchimp_marketing");
 const { response } = require("express");
+const ejs = require("ejs");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,6 +27,9 @@ mailchimp.setConfig({
   server: server,
 });
 
+app.set("view engine", "ejs");
+
+//Main
 app.get("/", (req, res) => {
   res.sendFile(`${__dirname}/signup.html`);
 });
@@ -71,13 +75,31 @@ app.post("/", async (req, res) => {
   // request.write(json);
   request.end(); 
   */
+  var title = "";
+  var heading = "";
+  var message = "";
+  var errorCount = 0;
 
   const response = await mailchimp.lists.batchListMembers(uniqueId, data);
+  errorCount = response.error_count;
   if (response.error_count > 0) {
-    res.sendFile(`${__dirname}/failure.html`);
+    title = "Failure";
+    heading = "Uh oh!";
+    message = "Something get wrong when you subscribing the newsletter.";
+    // res.sendFile(`${__dirname}/failure.html`);
   } else {
-    res.sendFile(`${__dirname}/success.html`);
+    title = "Success";
+    heading = "Yeah! awesome";
+    message = "Thanks for your subscribe to our newsletter.";
+    // res.sendFile(`${__dirname}/success.html`);
   }
+
+  res.render("status", {
+    title: title,
+    heading: heading,
+    message: message,
+    errorCount: errorCount,
+  });
 });
 
 app.post("/failure", (req, res) => {
