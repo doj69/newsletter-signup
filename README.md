@@ -1,7 +1,7 @@
 # newsletter-signup
-Newletter subscribe using express, bootstrap, body-parser, mailchimp and heroku deployment cloud.
+Newsletter subscribe using express, bootstrap, body-parser, mailchimp and heroku deployment cloud.
 
 # HOW
 - run the project using command npm install first
-- type the command nodemon app.js
+- type the command nodemon app.js (make sure nodemon in the global installation)
 - type localhost:3000 in your browser
